@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Middleman Dashboard</title>
+    <style>
+        body {
+            font-family: monospace;
+            background: #0f0f0f;
+            color: #e0e0e0;
+            padding: 40px;
+        }
+
+        h1 {
+            color: #00ff88;
+            margin-bottom: 4px;
+        }
+
+        p.sub {
+            color: #666;
+            margin-bottom: 32px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            color: #00ff88;
+            border-bottom: 1px solid #333;
+            padding: 8px 12px;
+        }
+
+        td {
+            padding: 8px 12px;
+            border-bottom: 1px solid #1a1a1a;
+        }
+
+        .badge {
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        .high {
+            background: #ff4444;
+            color: white;
+        }
+
+        .mid {
+            background: #ff8800;
+            color: white;
+        }
+
+        .low {
+            background: #00ff88;
+            color: black;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>⚡ Middleman</h1>
+    <p class="sub">AI-Powered Rate Limiter — live traffic</p>
+    <table>
+        <thead>
+            <tr>
+                <th>IP</th>
+                <th>Requests (last 60s)</th>
+                <th>Current Limit</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+    </table>
+
+    <script>
+        async function refresh() {
+            const res = await fetch('/__stats__');
+            const data = await res.json();
+            const tbody = document.getElementById('tbody');
+            tbody.innerHTML = '';
+            for (const [ip, info] of Object.entries(data)) {
+                const ratio = info.requests_last_minute / info.current_limit;
+                const badgeClass = ratio >= 1 ? 'high' : ratio > 0.7 ? 'mid' : 'low';
+                const status = ratio >= 1 ? 'BLOCKED' : ratio > 0.7 ? 'WARNING' : 'OK';
+                tbody.innerHTML += `
+          <tr>
+            <td>${ip}</td>
+            <td>${info.requests_last_minute}</td>
+            <td>${info.current_limit}/min</td>
+            <td><span class="badge ${badgeClass}">${status}</span></td>
+          </tr>`;
+            }
+        }
+        refresh();
+        setInterval(refresh, 3000);
+    </script>
+</body>
+
+</html>
