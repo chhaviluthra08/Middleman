@@ -74,7 +74,7 @@ while true; do curl -s -o /dev/null http://localhost:8000/posts/1; sleep 0.3; do
 
 ---
 
-## Screenshot (post spamming) 
+## Screenshot
 ![Middleman Dashboard](dashboard.png)
 
 ## What's next
