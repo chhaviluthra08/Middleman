@@ -1,6 +1,6 @@
 # Middleman
 
-A reverse proxy that uses AI to dynamically rate limit users based on behavior — not just fixed rules.
+A reverse proxy that uses AI to dynamically rate limit users based on behavior, not just fixed rules.
 
 Most rate limiters apply a blanket rule to everyone. Middleman watches how each user behaves, and when they get blocked, an LLM classifies them (NORMAL / AGGRESSIVE / BOT / HEAVY_USER) and adjusts their personal limit accordingly.
 
